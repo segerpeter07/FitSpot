@@ -1,0 +1,25 @@
+import numpy
+
+with open('xdata1.txt', 'r') as f:
+    x = f.readlines()
+x = list(map(float, x))
+
+Fs = 50
+Nx = len(x)
+
+fx = numpy.linspace(-Fs/2, Fs/2 - Fs/Nx, Nx)
+X = numpy.fft.fft(x)
+
+max1ind = numpy.argmax(X)
+X[max1ind] = 0
+max2 = numpy.amax(X)
+max2ind = numpy.argmax(X)
+print(abs(max2))
+print(type(max2))
+print(max2ind)
+print(fx[max2ind])
+# spm = fx[max2ind]*60
+# bpm = spm/2
+#
+# print(spm)
+# print(bpm)
