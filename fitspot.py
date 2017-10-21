@@ -6,6 +6,8 @@ from flask import Flask, redirect, render_template, request, session, abort, url
 from werkzeug.utils import secure_filename
 from backend import *
 import base64
+import pprint
+import subprocess
 
 import spotipy
 import spotipy.util as util
@@ -18,6 +20,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 
 key_id = os.environ.get('SPOTIFY_CLIENT_ID')
 key_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
+redirect_url = 'http://localhost:8000/callback'
 
 sp = spotipy.Spotify(key_secret)
 
@@ -105,15 +108,15 @@ if __name__ == "__main__":
 
 
 
-
+    '''
+    WORKS!!!
     client_credentials_manager = SpotifyClientCredentials(client_id=key_id, client_secret=key_secret)
 
-    '''
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
     # spotify = spotipy.Spotify()
     res = sp.search(q='artist:MIKA', type='artist')
     print(res)
-    '''
+
 
     if len(sys.argv) > 1:
         username = sys.argv[1]
@@ -131,6 +134,43 @@ if __name__ == "__main__":
             print(track['name'] + ' - ' + track['artists'][0]['name'])
     else:
         print("Can't get token for", username)
+    '''
+
+    client_credentials_manager = SpotifyClientCredentials(client_id=key_id, client_secret=key_secret)
+
+    scope = ' playlist-modify-public'
+
+    if len(sys.argv) > 1:
+        username = sys.argv[1]
+    else:
+        print('Usage %s username'%(sys.argv[0],))
+        sys.exit()
+
+    token = util.prompt_for_user_token(username, scope, client_id=key_id, client_secret=key_secret, redirect_uri=redirect_url)
+    print(token)
+
+    if token:
+        sp = spotipy.Spotify(auth=token, client_credentials_manager=client_credentials_manager)
+        sp.trace = False
+        playlist_name = 'FitSpot'
+        playlist_description = 'This playlist was made using FitSot'
+        # playlists = sp.user_playlist_create(username, playlist_name, playlist_description)
+        # result = sp.search('Kygo')
+        # pprint.pprint(result)
+        results = sp.user_playlist_add_tracks(username, 'spotify:user:lightknight:playlist:0NPyMjih5FPrbFUqMl4uAH', 'spotify:track:2UxfcZJCphbEkfbZ6nLiDx')
+
+        # pprint.pprint(playlists)
+
+        # results = sp.current_user_saved_tracks()
+        # results = sp.current_user_playlists()
+        # for item in results['items']:
+            # track = item['track']
+            # playlist = item['snapshot_id']
+            # print(track['name'] + ' - ' + track['artists'][0]['name'])
+            # print(playlist)
+    else:
+        print('Can\' get token')
+
 
     # playlists = sp.user_playlists('lightknight')
     # while playlists:
