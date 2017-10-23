@@ -1,4 +1,6 @@
 import csv
+import numpy
+from stridestobpm import *
 
 def build_dict(filename):
     file = open(filename, 'r')
@@ -54,7 +56,20 @@ def readin_csv(filename):
                     ans.append(tmp)
         i += 1
     f.close()
-    print(ans[1])
+    return ans
+
+def make_playlist(filename):
+    data = readin_csv(filename)
+    # print(data)
+    x = getx(data, horizontal=True)
+    bpm = xtoBpm(x)
+    bpm = numpy.asscalar(bpm)
+    bpm = int(bpm)
+    print(bpm)
+    songs = build_dict('top40')
+    playlist = build_playlist(songs, bpm)
+    return playlist
+
 
 def readin_txt(filename):
     file = open('uploads/'+filename, 'r')
@@ -63,7 +78,20 @@ def readin_txt(filename):
         ans.append(line)
     print(ans[2])
 
+class user:
+    def __init__(self, username, user_id):
+        self.username = username
+        self.user_id = user_id
+
+
+class playlist:
+    def __init__(self, name, description, uri):
+        self.name = name
+        self.description = description
+        self.uri = uri
 
 if __name__ == '__main__':
     # readin_txt('Recording1.txt')
-    readin_csv('testrun1.csv')
+    # readin_csv('testrun1.csv')
+
+    print(make_playlist('testrun1.csv'))
