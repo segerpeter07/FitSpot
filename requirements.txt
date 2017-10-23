@@ -1,6 +1,6 @@
 Flask==0.12
 Jinja2==2.8
-Wekzeug
+werkzeug
 requests==2.9.1
 spotipy==2.4.4
 pprintpp==0.3.0
