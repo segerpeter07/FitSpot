@@ -1,10 +1,10 @@
 import numpy
 import matplotlib.pyplot as plt
 
-# read txt file
-# with open('xdata1.txt', 'r') as f:
-#     x = f.readlines()
-# x = list(map(float, x))
+#read txt file
+with open('xdata1.txt', 'r') as f:
+    x = f.readlines()
+x = list(map(float, x))
 
 def getx(data, horizontal = False):
     if horizontal == True:
@@ -35,3 +35,5 @@ def xtoBpm(x, Fs=50, plot=False):
     bpm = round(spm/2) # divide by 2 for bpm
 
     return bpm
+
+print(xtoBpm(x))
